@@ -19,6 +19,14 @@ locals {
   module_path = substr(path.module, 0, 1) == "/" ? path.module : "./${path.module}"
   tags        = setsubtract(var.tags, [""])
   service     = "messagehub"
+  isEnterprise = var.plan == "enterprise"
+  service_endpoints = {
+    service-endpoints = var.private_endpoints ? "private" : "public-and-private"
+  }
+  private_ip_allowlist = var.private_ip_allowlist != null ? { private_ip_allowlist: var.private_ip_allowlist } : {}
+  throughput = var.throughput != null ? { throughput = var.throughput } : {}
+  storage_size = var.storage_size != null ? { storage_size = var.storage_size } : {}
+  parameters   = local.isEnterprise ? merge(local.service_endpoints, local.private_ip_allowlist, local.throughput, local.storage_size) : {}
 }
 
 resource ibm_resource_instance instance {
@@ -30,6 +38,7 @@ resource ibm_resource_instance instance {
   location          = var.region
   resource_group_id = data.ibm_resource_group.resource_group.id
   tags              = local.tags
+  parameters        = local.parameters
 
   timeouts {
     create = "15m"
