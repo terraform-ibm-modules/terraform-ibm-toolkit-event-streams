@@ -66,6 +66,97 @@ versions:
         description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
         default: event-streams
         optional: true
+      - name: private_endpoints
+        type: bool
+        description: 'Flag indicating that the service should only use private endpoints. (Note: this option is only available for the enterprise plan)'
+        default: true
+        optional: true
+      - name: private_ip_allowlist
+        type: list(string)
+        description: 'The list of ip address ranges that are allowed to access the service. (Note: this option is only available for the enterprise plan. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-restrict_access for more details)'
+        default: null
+        optional: true
+      - name: throughput
+        type: string
+        description: 'For enterprise instance only. Options are: ''150'', ''300'', ''450''. Default is ''150'''
+        default: "null"
+        optional: true
+      - name: storage_size
+        type: string
+        description: 'for enterprise instance only. Options are: ''2048'', ''4096'', ''6144'', ''8192'', ''10240'', ''12288''. Default is ''2048''.'
+        default: "null"
+        optional: true
+    version: v1.1.0
+    outputs:
+      - name: id
+        description: The Event Streams instance id
+      - name: name
+        description: The Event Streams instance name
+      - name: crn
+        description: The crn of the Event Streams instance
+      - name: location
+        description: The Event Streams instance location
+      - name: key_name
+        description: The name of the credential provisioned for the Event Streams instance
+      - name: key_id
+        description: The name of the credential provisioned for the Event Streams instance
+      - name: service
+        description: The name of the key provisioned for the Event Streams instance
+      - name: label
+        description: The label used for the Event Streams instance
+  - platforms: []
+    dependencies:
+      - id: resource_group
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
+            version: ">= 2.1.0"
+    variables:
+      - name: resource_group_name
+        moduleRef:
+          id: resource_group
+          output: name
+        type: string
+        description: Resource group where the cluster has been provisioned.
+      - name: name_prefix
+        scope: global
+        type: string
+        description: The prefix name for the service. If not provided it will default to the resource group name
+        default: ""
+        optional: true
+      - name: ibmcloud_api_key
+        scope: global
+        type: string
+        description: The api key for IBM Cloud access
+      - name: region
+        scope: global
+        type: string
+        description: Geographic location of the resource (e.g. us-south, us-east)
+      - name: name
+        scope: ignore
+        type: string
+        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
+        default: ""
+        optional: true
+      - name: tags
+        type: list(string)
+        description: Tags that should be applied to the service
+        default: []
+        optional: true
+      - name: plan
+        type: string
+        description: The type of plan the service instance should run under (lite, standard, or enterprise)
+        default: standard
+        optional: true
+      - name: provision
+        type: bool
+        description: Flag indicating that key-protect instance should be provisioned
+        default: true
+        optional: true
+      - name: label
+        type: string
+        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
+        default: event-streams
+        optional: true
     version: v1.0.0
     outputs:
       - name: id
