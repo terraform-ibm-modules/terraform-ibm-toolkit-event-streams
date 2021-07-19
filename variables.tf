@@ -48,3 +48,27 @@ variable "label" {
   description = "The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}"
   default     = "event-streams"
 }
+
+variable "private_endpoints" {
+  type        = bool
+  description = "Flag indicating that the service should only use private endpoints. (Note: this option is only available for the enterprise plan)"
+  default     = true
+}
+
+variable "private_ip_allowlist" {
+  type        = list(string)
+  description = "The list of ip address ranges that are allowed to access the service. (Note: this option is only available for the enterprise plan. See https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-restrict_access for more details)"
+  default     = null
+}
+
+variable "throughput" {
+  type        = string
+  description = "For enterprise instance only. Options are: '150', '300', '450'. Default is '150'"
+  default     =  null
+}
+
+variable "storage_size" {
+  type        = string
+  description = "for enterprise instance only. Options are: '2048', '4096', '6144', '8192', '10240', '12288'. Default is '2048'."
+  default     = null
+}
