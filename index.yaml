@@ -1,11 +1,89 @@
 id: github.com/cloud-native-toolkit/terraform-ibm-event-streams
-name: ""
+name: ibm-event-streams
+alias: event-streams
 type: terraform
-description: ""
+description: |
+  Module to work with an IBM Cloud Event Streams instance. If the `provision` flag is true then an new instance
+  of IBM Cloud Event Streams is provisioned. Otherwise, the module will find an existing instance with the
+  provided name and create a credential. The name and id of the Event Streams instance as well as the name and id
+  of the credential instance are exported from the module for use by other modules.
 tags:
   - tools
-  - devops
+  - infrastructure
+  - event streams
+  - saas
 versions:
+  - platforms: []
+    dependencies:
+      - id: resource_group
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
+            version: ">= 2.1.0"
+    variables:
+      - name: resource_group_name
+        moduleRef:
+          id: resource_group
+          output: name
+        type: string
+        description: Resource group where the cluster has been provisioned.
+      - name: name_prefix
+        scope: global
+        type: string
+        description: The prefix name for the service. If not provided it will default to the resource group name
+        default: ""
+        optional: true
+      - name: ibmcloud_api_key
+        scope: global
+        type: string
+        description: The api key for IBM Cloud access
+      - name: region
+        scope: global
+        type: string
+        description: Geographic location of the resource (e.g. us-south, us-east)
+      - name: name
+        scope: ignore
+        type: string
+        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
+        default: ""
+        optional: true
+      - name: tags
+        type: list(string)
+        description: Tags that should be applied to the service
+        default: []
+        optional: true
+      - name: plan
+        type: string
+        description: The type of plan the service instance should run under (lite, standard, or enterprise)
+        default: standard
+        optional: true
+      - name: provision
+        type: bool
+        description: Flag indicating that key-protect instance should be provisioned
+        default: true
+        optional: true
+      - name: label
+        type: string
+        description: The name that should be used for the service, particularly when connecting to an existing service. If not provided then the name will be defaulted to {name prefix}-{service}
+        default: event-streams
+        optional: true
+    version: v1.0.0
+    outputs:
+      - name: id
+        description: The Event Streams instance id
+      - name: name
+        description: The Event Streams instance name
+      - name: crn
+        description: The crn of the Event Streams instance
+      - name: location
+        description: The Event Streams instance location
+      - name: key_name
+        description: The name of the credential provisioned for the Event Streams instance
+      - name: key_id
+        description: The name of the credential provisioned for the Event Streams instance
+      - name: service
+        description: The name of the key provisioned for the Event Streams instance
+      - name: label
+        description: The label used for the Event Streams instance
   - platforms:
       - kubernetes
       - ocp3
@@ -27,28 +105,3 @@ versions:
     #          version: ">= 1.6.0"
     variables: []
     version: v0.0.0
-#    - name: cluster_type
-#      moduleRef:
-#        id: cluster
-#        output: type_code
-#    - name: cluster_ingress_hostname
-#      moduleRef:
-#        id: cluster
-#        output: ingress_hostname
-#    - name: cluster_config_file
-#      moduleRef:
-#        id: cluster
-#        output: config_file_path
-#    - name: tls_secret_name
-#      moduleRef:
-#        id: cluster
-#        output: tls_secret_name
-#    - name: releases_namespace
-#      moduleRef:
-#        id: namespace
-#        output: name
-#        discriminator: tools
-#    - name: icon_url
-#      moduleRef:
-#        id: dashboard
-#        output: base_icon_url
