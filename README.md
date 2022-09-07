@@ -25,6 +25,8 @@ This module makes use of the output from other modules:
 
 ## Example usage
 
+[Refer test cases for more details](test/stages/stage2-event-streams.tf)
+
 ```hcl-terraform
 module "event-streams" {
   source = "github.com/cloud-native-toolkit/terraform-ibm-event-streams.git"
